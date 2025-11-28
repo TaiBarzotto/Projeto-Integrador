@@ -12,8 +12,12 @@ const obterFornecedorPorId = async (fornecedor) => {
 
 // Função para criar um novo fornecedor
 const criarFornecedor = async (fornecedor) => {
-	await model.Fornecedor.create(fornecedor);
-	return fornecedor;
+	try {
+		await model.Fornecedor.create(fornecedor);
+		return fornecedor;
+	} catch (error) {
+		throw error;
+	}
 };
 
 // Função para atualizar um fornecedor

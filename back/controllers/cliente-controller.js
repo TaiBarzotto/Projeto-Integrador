@@ -10,7 +10,7 @@ clienteRouter.post("/", clienteService.criaCliente);
 clienteRouter.get("/todos", clienteService.retornaTodosClientes);
 
 // GET /cliente/:id - Retornar cliente por ID
-clienteRouter.get("/:id", clienteService.retornaClientePorId);
+clienteRouter.get("/:id", clienteService.retornaClientePorEmail);
 
 // PUT /cliente/:id - Atualizar cliente
 clienteRouter.put("/:id", clienteService.atualizaCliente);

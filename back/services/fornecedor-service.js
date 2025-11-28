@@ -13,18 +13,24 @@ const retornaTodosFornecedores = async (req, res) => {
 
 // Função para criar um novo fornecedor
 const criaFornecedor = async (req, res) => {
-	const {nome, email } = req.body;
-	console.log({nome, email });
+	const {
+		email,
+		nome_pessoa,
+		telefone,
+		nome_da_marca,
+	} = req.body
 	try {
-		if (!nome || !email) {
+		if (!email || !nome_pessoa || !telefone || !nome_da_marca) {
 			return res
 				.status(400)
 				.json({ message: "Nome e email são obrigatórios." });
 		}
 
 		const fornecedor = await fornecedorRepository.criarFornecedor({
-			nome,
 			email,
+			nome_pessoa,
+			telefone,
+			nome_da_marca,
 		});
 		res.status(201).json(fornecedor);
 	} catch (error) {
@@ -35,13 +41,20 @@ const criaFornecedor = async (req, res) => {
 
 // Função para atualizar um fornecedor
 const atualizaFornecedor = async (req, res) => {
-	const { nome, email } = req.body;
+	const {
+		email,
+		nome_pessoa,
+		telefone,
+		nome_da_marca,
+	} = req.body
 	const id = parseInt(req.params.id);
 	try {
 		const fornecedorAtualizado = await fornecedorRepository.atualizarFornecedor({
 			id,
-			nome,
 			email,
+			nome_pessoa,
+			telefone,
+			nome_da_marca,
 		});
 
 		if (fornecedorAtualizado) {
@@ -71,6 +84,13 @@ const deletaFornecedor = async (req, res) => {
 		}
 	} catch (error) {
 		console.error("Erro ao deletar fornecedor:", error);
+		if (error.name === "SequelizeForeignKeyConstraintError") {
+			return res.status(409).json({
+				message: "Fornecedor não pode ser deletado pois está sendo usado em outra tabela"
+			});
+		}
+
+		// Erro geral 
 		res.status(500).json({ message: "Erro ao deletar fornecedor" });
 	}
 };

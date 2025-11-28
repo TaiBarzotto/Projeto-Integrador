@@ -1,4 +1,4 @@
-Criação das tabelas
+--Criação das tabelas
 CREATE TABLE Cliente (
     Genero CHAR,
     Email VARCHAR PRIMARY KEY,
@@ -11,7 +11,7 @@ CREATE TABLE Cliente (
 
 CREATE TABLE Fornecedor (
     Email VARCHAR,
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nome_pessoa VARCHAR,
     Telefone VARCHAR,
     nome_da_marca VARCHAR
@@ -19,13 +19,13 @@ CREATE TABLE Fornecedor (
 
 CREATE TABLE Despesa (
     observacao VARCHAR,
-    Id INT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     valor DECIMAL(10,2),
     fk_categoria_despesa INT
 );
 
 CREATE TABLE Categoria_Despesa (
-    Id INT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     descricao VARCHAR,
     nome VARCHAR
 );
@@ -33,7 +33,7 @@ CREATE TABLE Categoria_Despesa (
 CREATE TABLE Categoria_Produto (
     nome VARCHAR,
     descricao VARCHAR,
-    Id INT PRIMARY KEY
+    Id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE Datas_Importantes (
@@ -50,7 +50,7 @@ CREATE TABLE Usuario (
 );
 
 CREATE TABLE Caixa (
-    Id INT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     data DATE,
     saldo_inicial DECIMAL(10,2),
     total_entradas DECIMAL(10,2),
@@ -59,7 +59,7 @@ CREATE TABLE Caixa (
 );
 
 CREATE TABLE Alertas (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     Texto VARCHAR,
     Resolvido BOOLEAN,
     fk_padrao_texto_id INT
@@ -67,17 +67,17 @@ CREATE TABLE Alertas (
 
 CREATE TABLE Padrao_Texto (
     texto_padrao VARCHAR,
-    ID INT PRIMARY KEY
+    ID SERIAL PRIMARY KEY
 );
 
 CREATE TABLE Produto (
-    Id INT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     nome VARCHAR,
     Preco_venda DECIMAL(10,2)
 );
 
 CREATE TABLE Vendas (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     valor_total DECIMAL(10,2),
     forma_de_pagamento VARCHAR,
     desconto DECIMAL(10,2),
@@ -87,7 +87,7 @@ CREATE TABLE Vendas (
 );
 
 CREATE TABLE Variante_Produto_Estoque (
-    ID INT PRIMARY KEY,
+    ID SERIAL PRIMARY KEY,
     codigo_de_barras BIGINT,
     tamanho VARCHAR,
     cor VARCHAR,
@@ -100,7 +100,7 @@ CREATE TABLE Variante_Produto_Estoque (
 );
 
 CREATE TABLE Parcela_despesa (
-    Id INT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     numero_parcela INT,
     valor_parcela DECIMAL(10,2),
     data_vencimento DATE,
@@ -110,7 +110,7 @@ CREATE TABLE Parcela_despesa (
 );
 
 CREATE TABLE Parcela_venda (
-    Id INT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     numero_parcela INT,
     valor_parcela DECIMAL(10,2),
     data_vencimento DATE,
@@ -120,7 +120,7 @@ CREATE TABLE Parcela_venda (
 );
 
 CREATE TABLE Endereco (
-    ID INT NOT NULL PRIMARY KEY,
+    ID SERIAL PRIMARY KEY,
     CEP VARCHAR,
     Rua VARCHAR,
     Cidade VARCHAR,
@@ -154,7 +154,7 @@ CREATE TABLE item_venda (
         PRIMARY KEY (fk_variante_produto_estoque_id, fk_vendas_id)
 );
 
-Referenciação das chaves estrangeiras
+--Referenciação das chaves estrangeiras
 ALTER TABLE Cliente
     ADD CONSTRAINT FK_Cliente_2 FOREIGN KEY (fk_Endereco)
     REFERENCES Endereco (ID) ON DELETE SET NULL;
@@ -212,27 +212,27 @@ ALTER TABLE item_venda
     REFERENCES Vendas (id) ON DELETE RESTRICT;
 
 --Dados aleatórios para popular as tabelas e testar consultas
-INSERT INTO Endereco (ID, CEP, Rua, Cidade, Bairro, Complemento, Estado, Numero) VALUES
-(1, '89000-101', 'Rua Ametista', 'Blumenau', 'Centro', NULL, 'SC', 101),
-(2, '89000-102', 'Rua Safira', 'Blumenau', 'Velha', 'Bloco B', 'SC', 202),
-(3, '89000-103', 'Rua Rubi', 'Blumenau', 'Itoupava', NULL, 'SC', 303),
-(4, '89000-104', 'Av. Brasil', 'Blumenau', 'Garcia', 'Sala 2', 'SC', 404),
-(5, '89000-105', 'Rua Esmeralda', 'Blumenau', 'Centro', NULL, 'SC', 505),
-(6, '89000-106', 'Rua Granada', 'Blumenau', 'Velha', NULL, 'SC', 606),
-(7, '89000-107', 'Rua Citrino', 'Blumenau', 'Itoupava', NULL, 'SC', 707),
-(8, '89000-108', 'Rua Opala', 'Blumenau', 'Ponta Aguda', 'Casa 1', 'SC', 808),
-(9, '89000-109', 'Rua Jade', 'Blumenau', 'Centro', NULL, 'SC', 909),
-(10, '89000-110', 'Rua Turquesa', 'Blumenau', 'Garcia', 'Fundos', 'SC', 110),
-(11, '89000-111', 'Rua Pérola', 'Blumenau', 'Centro', NULL, 'SC', 111),
-(12, '89000-112', 'Rua Coral', 'Blumenau', 'Velha', NULL, 'SC', 122),
-(13, '89000-113', 'Rua Topázio', 'Blumenau', 'Itoupava', NULL, 'SC', 133),
-(14, '89000-114', 'Rua Quartzo', 'Blumenau', 'Centro', 'Ap 3', 'SC', 144),
-(15, '89000-115', 'Rua Onix', 'Blumenau', 'Velha', NULL, 'SC', 155),
-(16, '89000-116', 'Rua Hematita', 'Blumenau', 'Garcia', NULL, 'SC', 166),
-(17, '89000-117', 'Rua Aço', 'Blumenau', 'Centro', NULL, 'SC', 177),
-(18, '89000-118', 'Rua Bronze', 'Blumenau', 'Ponta Aguda', NULL, 'SC', 188),
-(19, '89000-119', 'Rua Prata', 'Blumenau', 'Velha', NULL, 'SC', 199),
-(20, '89000-120', 'Rua Ouro', 'Blumenau', 'Itoupava', NULL, 'SC', 200);
+INSERT INTO Endereco (CEP, Rua, Cidade, Bairro, Complemento, Estado, Numero) VALUES
+('89000-101', 'Rua Ametista', 'Blumenau', 'Centro', NULL, 'SC', 101),
+('89000-102', 'Rua Safira', 'Blumenau', 'Velha', 'Bloco B', 'SC', 202),
+('89000-103', 'Rua Rubi', 'Blumenau', 'Itoupava', NULL, 'SC', 303),
+('89000-104', 'Av. Brasil', 'Blumenau', 'Garcia', 'Sala 2', 'SC', 404),
+('89000-105', 'Rua Esmeralda', 'Blumenau', 'Centro', NULL, 'SC', 505),
+('89000-106', 'Rua Granada', 'Blumenau', 'Velha', NULL, 'SC', 606),
+('89000-107', 'Rua Citrino', 'Blumenau', 'Itoupava', NULL, 'SC', 707),
+('89000-108', 'Rua Opala', 'Blumenau', 'Ponta Aguda', 'Casa 1', 'SC', 808),
+('89000-109', 'Rua Jade', 'Blumenau', 'Centro', NULL, 'SC', 909),
+('89000-110', 'Rua Turquesa', 'Blumenau', 'Garcia', 'Fundos', 'SC', 110),
+('89000-111', 'Rua Pérola', 'Blumenau', 'Centro', NULL, 'SC', 111),
+('89000-112', 'Rua Coral', 'Blumenau', 'Velha', NULL, 'SC', 122),
+('89000-113', 'Rua Topázio', 'Blumenau', 'Itoupava', NULL, 'SC', 133),
+('89000-114', 'Rua Quartzo', 'Blumenau', 'Centro', 'Ap 3', 'SC', 144),
+('89000-115', 'Rua Onix', 'Blumenau', 'Velha', NULL, 'SC', 155),
+('89000-116', 'Rua Hematita', 'Blumenau', 'Garcia', NULL, 'SC', 166),
+('89000-117', 'Rua Aço', 'Blumenau', 'Centro', NULL, 'SC', 177),
+('89000-118', 'Rua Bronze', 'Blumenau', 'Ponta Aguda', NULL, 'SC', 188),
+('89000-119', 'Rua Prata', 'Blumenau', 'Velha', NULL, 'SC', 199),
+('89000-120', 'Rua Ouro', 'Blumenau', 'Itoupava', NULL, 'SC', 200);
 
 INSERT INTO Categoria_Produto (nome, descricao, Id) VALUES
 ('Roupas', 'Peças de vestuário geral', 1),
@@ -300,49 +300,49 @@ INSERT INTO Padrao_Texto (texto_padrao, ID) VALUES
 ('Manutenção preventiva', 19),
 ('Aviso geral', 20);
 
-INSERT INTO Fornecedor (Email, id, nome_pessoa, Telefone, nome_da_marca) VALUES
-('forn1@mail.com', 1, 'Carlos Mendes', '47990010001', 'ModaSul'),
-('forn2@mail.com', 2, 'Julia Rocha', '47990010002', 'TopWear'),
-('forn3@mail.com', 3, 'Fernanda Alves', '47990010003', 'Estilo+'),
-('forn4@mail.com', 4, 'Rafael Dias', '47990010004', 'FashionPrime'),
-('forn5@mail.com', 5, 'Amanda Luz', '47990010005', 'EliteFit'),
-('forn6@mail.com', 6, 'Tiago Souza', '47990010006', 'UrbanLook'),
-('forn7@mail.com', 7, 'Larissa Lima', '47990010007', 'VesteBem'),
-('forn8@mail.com', 8, 'Gabriel Farias', '47990010008', 'SportMax'),
-('forn9@mail.com', 9, 'Daniela Reis', '47990010009', 'Luxio'),
-('forn10@mail.com', 10, 'Marcos Klein', '47990010010', 'MegaStore'),
-('forn11@mail.com', 11, 'Paula Meireles', '47990010011', 'NovaModa'),
-('forn12@mail.com', 12, 'Henrique Rios', '47990010012', 'FitClub'),
-('forn13@mail.com', 13, 'Marina Duarte', '47990010013', 'LinhaFina'),
-('forn14@mail.com', 14, 'Rodrigo Pinto', '47990010014', 'LojaMix'),
-('forn15@mail.com', 15, 'Patrícia Gomes', '47990010015', 'Clássico'),
-('forn16@mail.com', 16, 'Ricardo Campos', '47990010016', 'OutletMax'),
-('forn17@mail.com', 17, 'Carla Ribeiro', '47990010017', 'Estilo Vip'),
-('forn18@mail.com', 18, 'Felipe Braga', '47990010018', 'ModaFit'),
-('forn19@mail.com', 19, 'Sandra Costa', '47990010019', 'CityWear'),
-('forn20@mail.com', 20, 'Lucas Barros', '47990010020', 'StorePro');
+INSERT INTO Fornecedor (Email, nome_pessoa, Telefone, nome_da_marca) VALUES
+('forn1@mail.com', 'Carlos Mendes', '47990010001', 'ModaSul'),
+('forn2@mail.com', 'Julia Rocha', '47990010002', 'TopWear'),
+('forn3@mail.com', 'Fernanda Alves', '47990010003', 'Estilo+'),
+('forn4@mail.com', 'Rafael Dias', '47990010004', 'FashionPrime'),
+('forn5@mail.com', 'Amanda Luz', '47990010005', 'EliteFit'),
+('forn6@mail.com', 'Tiago Souza', '47990010006', 'UrbanLook'),
+('forn7@mail.com', 'Larissa Lima', '47990010007', 'VesteBem'),
+('forn8@mail.com', 'Gabriel Farias', '47990010008', 'SportMax'),
+('forn9@mail.com', 'Daniela Reis', '47990010009', 'Luxio'),
+('forn10@mail.com', 'Marcos Klein', '47990010010', 'MegaStore'),
+('forn11@mail.com', 'Paula Meireles', '47990010011', 'NovaModa'),
+('forn12@mail.com', 'Henrique Rios', '47990010012', 'FitClub'),
+('forn13@mail.com', 'Marina Duarte', '47990010013', 'LinhaFina'),
+('forn14@mail.com', 'Rodrigo Pinto', '47990010014', 'LojaMix'),
+('forn15@mail.com', 'Patrícia Gomes', '47990010015', 'Clássico'),
+('forn16@mail.com', 'Ricardo Campos', '47990010016', 'OutletMax'),
+('forn17@mail.com', 'Carla Ribeiro', '47990010017', 'Estilo Vip'),
+('forn18@mail.com', 'Felipe Braga', '47990010018', 'ModaFit'),
+('forn19@mail.com', 'Sandra Costa', '47990010019', 'CityWear'),
+('forn20@mail.com', 'Lucas Barros', '47990010020', 'StorePro');
 
-INSERT INTO Produto (Id, nome, Preco_venda) VALUES
-(1, 'Produto 1', 49.90),
-(2, 'Produto 2', 69.90),
-(3, 'Produto 3', 89.90),
-(4, 'Produto 4', 39.90),
-(5, 'Produto 5', 79.90),
-(6, 'Produto 6', 149.90),
-(7, 'Produto 7', 129.90),
-(8, 'Produto 8', 99.90),
-(9, 'Produto 9', 59.90),
-(10, 'Produto 10', 119.90),
-(11, 'Produto 11', 199.90),
-(12, 'Produto 12', 34.90),
-(13, 'Produto 13', 29.90),
-(14, 'Produto 14', 54.90),
-(15, 'Produto 15', 74.90),
-(16, 'Produto 16', 89.50),
-(17, 'Produto 17', 139.90),
-(18, 'Produto 18', 159.90),
-(19, 'Produto 19', 179.90),
-(20, 'Produto 20', 24.90);
+INSERT INTO Produto (nome, Preco_venda) VALUES
+('Produto 1', 49.90),
+('Produto 2', 69.90),
+('Produto 3', 89.90),
+('Produto 4', 39.90),
+('Produto 5', 79.90),
+('Produto 6', 149.90),
+('Produto 7', 129.90),
+('Produto 8', 99.90),
+('Produto 9', 59.90),
+('Produto 10', 119.90),
+('Produto 11', 199.90),
+('Produto 12', 34.90),
+('Produto 13', 29.90),
+('Produto 14', 54.90),
+('Produto 15', 74.90),
+('Produto 16', 89.50),
+('Produto 17', 139.90),
+('Produto 18', 159.90),
+('Produto 19', 179.90),
+('Produto 20', 24.90);
 
 INSERT INTO Usuario (nome, Administrador, Senha, Email) VALUES
 ('Admin01', TRUE, 'senha01', 'user01@mail.com'),
@@ -389,29 +389,29 @@ INSERT INTO Cliente (Genero, Email, Telefone, nome, fk_Endereco, Nascimento, ace
 ('M', 'rafael.dias@example.com', '31996543221', 'Rafael Dias', 20, '1993-12-23', TRUE);
 
 INSERT INTO Variante_Produto_Estoque
-(id, codigo_de_barras, tamanho, cor, quantidade_estoque, limite_minimo, data_cadastro, ativo, Custo, fk_produto_id)
+(codigo_de_barras, tamanho, cor, quantidade_estoque, limite_minimo, data_cadastro, ativo, Custo, fk_produto_id)
 VALUES
-(1, 7891234560011, 'M', 'Branco', 4, 10, '2025-01-10', TRUE, 45.90, 1),
-(2, 7891234560012, 'G', 'Branco', 11, 10, '2025-01-10', TRUE, 45.90, 1),
-(3, 7891234560013, 'M', 'Preto', 30, 8, '2025-01-11', TRUE, 49.90, 2),
-(4, 7891234560014, '40', 'Azul', 18, 5, '2025-01-12', TRUE, 79.90, 3),
-(5, 7891234560015, '42', 'Bege', 20, 5, '2025-01-12', TRUE, 82.50, 4),
-(6, 7891234560016, 'M', 'Floral', 12, 4, '2025-01-13', TRUE, 55.00, 5),
-(7, 7891234560017, 'P', 'Preto', 10, 3, '2025-01-13', TRUE, 42.00, 6),
-(8, 7891234560018, '38', 'Azul', 22, 6, '2025-01-14', TRUE, 78.90, 7),
-(9, 7891234560019, 'M', 'Cinza', 35, 10, '2025-01-14', TRUE, 39.90, 8),
-(10, 7891234560020, 'M', 'Verde', 15, 4, '2025-01-15', TRUE, 48.00, 9),
-(11, 7891234560021, '38', 'Azul', 18, 5, '2025-01-15', TRUE, 69.90, 10),
-(12, 7891234560022, 'M', 'Preto', 7, 3, '2025-01-16', TRUE, 32.00, 11),
-(13, 7891234560023, 'G', 'Azul', 14, 4, '2025-01-16', TRUE, 46.50, 12),
-(14, 7891234560024, 'M', 'Verde', 16, 5, '2025-01-17', TRUE, 44.00, 13),
-(15, 7891234560025, 'M', 'Colorido', 12, 3, '2025-01-17', TRUE, 58.50, 14),
-(16, 7891234560026, '39', 'Branco', 28, 10, '2025-01-18', TRUE, 89.90, 15),
-(17, 7891234560027, '41', 'Cinza', 20, 8, '2025-01-18', TRUE, 92.00, 16),
-(18, 7891234560028, '35', 'Ouro', 11, 3, '2025-01-19', TRUE, 99.90, 17),
-(19, 7891234560029, '36', 'Preto', 13, 4, '2025-01-19', TRUE, 89.00, 18),
-(20, 7891234560030, 'Único', 'Marrom', 40, 10, '2025-01-20', TRUE, 29.90, 19),
-(21, 7891234560031, 'Único', 'Rosa', 22, 6, '2025-01-20', TRUE, 27.90, 20);
+(7891234560011, 'M', 'Branco', 4, 10, '2025-01-10', TRUE, 45.90, 1),
+(7891234560012, 'G', 'Branco', 11, 10, '2025-01-10', TRUE, 45.90, 1),
+(7891234560013, 'M', 'Preto', 30, 8, '2025-01-11', TRUE, 49.90, 2),
+(7891234560014, '40', 'Azul', 18, 5, '2025-01-12', TRUE, 79.90, 3),
+(7891234560015, '42', 'Bege', 20, 5, '2025-01-12', TRUE, 82.50, 4),
+(7891234560016, 'M', 'Floral', 12, 4, '2025-01-13', TRUE, 55.00, 5),
+(7891234560017, 'P', 'Preto', 10, 3, '2025-01-13', TRUE, 42.00, 6),
+(7891234560018, '38', 'Azul', 22, 6, '2025-01-14', TRUE, 78.90, 7),
+(7891234560019, 'M', 'Cinza', 35, 10, '2025-01-14', TRUE, 39.90, 8),
+(7891234560020, 'M', 'Verde', 15, 4, '2025-01-15', TRUE, 48.00, 9),
+(7891234560021, '38', 'Azul', 18, 5, '2025-01-15', TRUE, 69.90, 10),
+(7891234560022, 'M', 'Preto', 7, 3, '2025-01-16', TRUE, 32.00, 11),
+(7891234560023, 'G', 'Azul', 14, 4, '2025-01-16', TRUE, 46.50, 12),
+(7891234560024, 'M', 'Verde', 16, 5, '2025-01-17', TRUE, 44.00, 13),
+(7891234560025, 'M', 'Colorido', 12, 3, '2025-01-17', TRUE, 58.50, 14),
+(7891234560026, '39', 'Branco', 28, 10, '2025-01-18', TRUE, 89.90, 15),
+(7891234560027, '41', 'Cinza', 20, 8, '2025-01-18', TRUE, 92.00, 16),
+(7891234560028, '35', 'Ouro', 11, 3, '2025-01-19', TRUE, 99.90, 17),
+(7891234560029, '36', 'Preto', 13, 4, '2025-01-19', TRUE, 89.00, 18),
+(7891234560030, 'Único', 'Marrom', 40, 10, '2025-01-20', TRUE, 29.90, 19),
+(7891234560031, 'Único', 'Rosa', 22, 6, '2025-01-20', TRUE, 27.90, 20);
 
 
 INSERT INTO Vendas
