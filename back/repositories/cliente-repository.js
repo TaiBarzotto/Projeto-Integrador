@@ -47,7 +47,7 @@ const criarCliente = async (clienteData, enderecoData) => {
 const atualizarCliente = async (email, dadosAtualizados) => {
 	try {
 		const cliente = await model.Cliente.findByPk(email)
-
+		
 		if (!cliente) return null
 
 		// Se vier um endereço no body, atualiza ou cria
@@ -72,25 +72,25 @@ const atualizarCliente = async (email, dadosAtualizados) => {
 		})
 
 		// Retornar cliente atualizado
-		return await obterClientePorEmail(email)
+		return await obterClientePorEmail({email})
 	} catch (error) {
 		throw error
 	}
 }
 
 // Função para deletar um cliente
-const deletarCliente = async cliente => {
+const deletarCliente = async email => {
 	try {
 		const cliente = await model.Cliente.findByPk(email)
 
 		if (cliente.fk_endereco) {
 			const outrosClientes = await model.Cliente.count({
-				where: { fk_endereco: enderecoId },
+				where: { fk_endereco: cliente.fk_endereco },
 			})
 
 			// Se nenhum outro cliente usa esse endereço, pode deletar
 			if (outrosClientes === 0) {
-				await model.Endereco.destroy({ where: { id: enderecoId } })
+				await model.Endereco.destroy({ where: { id: cliente.fk_endereco } })
 			}
 		}
 

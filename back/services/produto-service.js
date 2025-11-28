@@ -13,17 +13,24 @@ const retornaTodosProdutos = async (req, res) => {
 
 // Função para criar um novo produto
 const criaProduto = async (req, res) => {
-	const { descricao } = req.body;
-	try {
-		if (!descricao) {
-			return res
-				.status(400)
-				.json({ message: "ID e descrição são obrigatórios." });
-		}
+	const { 
+		nome, 
+		preco_venda, 
+		variantes 
+    } = req.body;
 
-		const produto = await produtoRepository.criarProduto({
-			descricao,
-		});
+	try {
+		if (!nome || !preco_venda || !variantes) {
+            return res.status(400).json({
+                message: "Nome, preço de venda e variantes são obrigatórios."
+            });
+        }
+
+        const produto = await produtoRepository.criarProduto({
+            nome,
+            preco_venda,
+            variantes: variantes
+        });
 		res.status(201).json(produto);
 	} catch (error) {
 		console.log("Erro ao criar produto:", error);
@@ -33,12 +40,19 @@ const criaProduto = async (req, res) => {
 
 // Função para atualizar um produto
 const atualizaProduto = async (req, res) => {
-	const { descricao } = req.body;
+	const { 
+		nome, 
+		preco_venda, 
+		variantes 
+    } = req.body;
+
 	const id = parseInt(req.params.id);
 	try {
 		const produtoAtualizado = await produtoRepository.atualizarProduto({
 			id,
-			descricao,
+			nome, 
+			preco_venda, 
+			variantes,
 		});
 
 		if (produtoAtualizado) {

@@ -62,15 +62,17 @@ const atualizaCliente = async (req, res) => {
             endereco,
         } = req.body
 
-        const clienteAtualizado = await clienteRepository.atualizarCliente({
-            email,
-            nome,
-            telefone,
-            genero,
-            nascimento,
-            aceita_promocoes,
-            endereco,
-        })
+        const clienteAtualizado = await clienteRepository.atualizarCliente(
+            email, 
+            {
+                nome,
+                telefone,
+                genero,
+                nascimento,
+                aceita_promocoes,
+                endereco,
+            }
+        )
 
         if (clienteAtualizado) {
             res.status(200).json(clienteAtualizado)
@@ -86,8 +88,8 @@ const atualizaCliente = async (req, res) => {
 // Função para deletar um cliente
 const deletaCliente = async (req, res) => {
     try {
-        const email = req.params.email
-        const clienteRemovido = await clienteRepository.deletarCliente({ email })
+        const {email} = req.body
+        const clienteRemovido = await clienteRepository.deletarCliente(email)
 
         if (clienteRemovido) {
             res.status(200).json({

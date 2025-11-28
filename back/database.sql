@@ -173,7 +173,7 @@ ALTER TABLE Vendas
 
 ALTER TABLE Variante_Produto_Estoque
     ADD CONSTRAINT FK_Variante_Produto_Estoque_2 FOREIGN KEY (fk_produto_id)
-    REFERENCES Produto (Id) ON DELETE RESTRICT;
+    REFERENCES Produto (Id) ON DELETE CASCADE;
 
 ALTER TABLE Parcela_despesa
     ADD CONSTRAINT FK_Parcela_despesa_2 FOREIGN KEY (fk_despesa_id)

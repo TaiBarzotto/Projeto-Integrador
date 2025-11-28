@@ -9,13 +9,13 @@ clienteRouter.post("/", clienteService.criaCliente);
 // GET /clientes - Retornar todos os clientes
 clienteRouter.get("/todos", clienteService.retornaTodosClientes);
 
-// GET /cliente/:id - Retornar cliente por ID
-clienteRouter.get("/:id", clienteService.retornaClientePorEmail);
+// GET /cliente/:email - Retornar cliente por email
+clienteRouter.get("/:email", clienteService.retornaClientePorEmail);
 
-// PUT /cliente/:id - Atualizar cliente
-clienteRouter.put("/:id", clienteService.atualizaCliente);
+// PUT /cliente/ - Atualizar cliente
+clienteRouter.put("/", clienteService.atualizaCliente);
 
-// DELETE /cliente/:id - Deletar cliente
-clienteRouter.delete("/:id", clienteService.deletaCliente);
+// DELETE /cliente/ - Deletar cliente
+clienteRouter.delete("/", clienteService.deletaCliente);
 
 module.exports = clienteRouter;
