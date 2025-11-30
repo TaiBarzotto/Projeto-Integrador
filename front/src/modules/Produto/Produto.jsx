@@ -10,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Paper,
   Chip,
   Typography,
@@ -54,9 +55,11 @@ export default function Produto () {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [produtoEditando, setProdutoEditando] = useState(null)
   const [erro, setErro] = useState('')
+  const [orderBy, setOrderBy] = useState('')
+  const [order, setOrder] = useState('asc')
   const [produtosExpandidos, setProdutosExpandidos] = useState(new Set())
 
-  const isAdmin = currentUser?.role === 'administrador'
+  const isAdmin = currentUser.administrador
 
   // Filtro melhorado que busca também nos códigos de barras das variantes
   const produtosFiltrados = produtos.filter(p => {
@@ -199,6 +202,52 @@ export default function Produto () {
     }
     setProdutosExpandidos(novosExpandidos)
   }
+
+  const handleRequestSort = property => {
+    if (orderBy === property) {
+      // Ciclo: asc -> desc -> sem ordenação
+      if (order === 'asc') {
+        setOrder('desc')
+      } else if (order === 'desc') {
+        setOrderBy('')
+        setOrder('asc')
+      }
+    } else {
+      setOrderBy(property)
+      setOrder('asc')
+    }
+  }
+
+  const produtosOrdenados = [...produtosFiltrados].sort((a, b) => {
+    if (!orderBy) return 0
+
+    // Tratamento especial para status (campo calculado)
+    if (orderBy === 'status') {
+      const aStatus = getEstoqueBaixo(a) ? 1 : 0 // Baixo = 1, Normal = 0
+      const bStatus = getEstoqueBaixo(b) ? 1 : 0
+
+      if (aStatus < bStatus) {
+        return order === 'asc' ? -1 : 1
+      }
+      if (aStatus > bStatus) {
+        return order === 'asc' ? 1 : -1
+      }
+      return 0
+    }
+
+    // Ordenação padrão para campos string
+    const aValue = (a[orderBy] || '').toString().toLowerCase()
+    const bValue = (b[orderBy] || '').toString().toLowerCase()
+
+    if (aValue < bValue) {
+      return order === 'asc' ? -1 : 1
+    }
+    if (aValue > bValue) {
+      return order === 'asc' ? 1 : -1
+    }
+    return 0
+  })
+
 
   // Componente Card para Mobile
   const ProdutoCard = ({ produto }) => {
@@ -432,8 +481,9 @@ export default function Produto () {
       >
         <Box>
           <Typography
-            variant={isMobile ? 'h4' : 'h3'}
+            variant='h2'
             fontWeight='bold'
+            color='#0A0A0A'
             gutterBottom
           >
             Produtos
@@ -583,16 +633,32 @@ export default function Produto () {
               <Table size={isTablet ? 'small' : 'medium'}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Produto</TableCell>
+                    <TableCell>
+                      <TableSortLabel
+                        active={orderBy === 'nome'}
+                        direction={orderBy === 'nome' ? order : 'asc'}
+                        onClick={() => handleRequestSort('nome')}
+                      >
+                        Produto
+                      </TableSortLabel>
+                    </TableCell>
                     <TableCell>Preço</TableCell>
                     <TableCell>Estoque</TableCell>
                     <TableCell>Cores</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell>
+                      <TableSortLabel
+                        active={orderBy === 'status'}
+                        direction={orderBy === 'status' ? order : 'asc'}
+                        onClick={() => handleRequestSort('status')}
+                      >
+                        Status
+                      </TableSortLabel>
+                    </TableCell>
                     <TableCell align='center'>Ações</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {produtosFiltrados.map(produto => {
+                  {produtosOrdenados.map(produto => {
                     const isExpanded = produtosExpandidos.has(produto.id)
                     const cores = getCores(produto)
                     const fornecedorProduto = getFornecedor(produto)

@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import {
   Box,
   Card,
@@ -33,24 +34,24 @@ export default function LoginPage ({ onLogin }) {
   const [mostrarSenha, setMostrarSenha] = useState(false)
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(false)
+  const [usuarios, setUsuarios] = useState(false)
 
-  const usuarios = [
-    {
-      id: '1',
-      nome: 'Admin User',
-      email: 'admin@loja.com',
-      senha: 'admin123',
-      role: 'administrador'
-    },
-    {
-      id: '2',
-      nome: 'Vendedor Silva',
-      email: 'vendedor@loja.com',
-      senha: 'vend123',
-      role: 'vendedor'
+  const buscaUsusetUsuarios = async () => {
+    try {
+      const response = await axios.get('http://localhost:3002/usuario/todos')
+      console.log(response.data)
+      setUsuarios(response.data.usuarios)
+    } catch (error) {
+      setErro(error)
+      setUsuarios([])
     }
-  ]
+  }
 
+  useEffect(() => {
+    buscaUsusetUsuarios()
+    setErro('')
+  }, [])
+  
   const handleSubmit = e => {
     e.preventDefault()
     setErro('')

@@ -56,7 +56,7 @@ export function Navbar ({ usuario, onLogout }) {
   ]
 
   const filteredItems = menuItems.filter(
-    item => !item.adminOnly || usuario?.role === 'administrador'
+    item => !item.adminOnly || usuario?.administrador
   )
 
   const handleNavigate = page => {
@@ -127,7 +127,8 @@ export function Navbar ({ usuario, onLogout }) {
                 color='text.secondary'
                 sx={{ textTransform: 'capitalize' }}
               >
-                {usuario?.role}
+                {usuario?.administrador ? 'Administrador' : 'Vendedor'}
+
               </Typography>
             </Box>
 
@@ -162,7 +163,8 @@ export function Navbar ({ usuario, onLogout }) {
             color='text.secondary'
             sx={{ textTransform: 'capitalize' }}
           >
-            {usuario?.role}
+            {usuario?.administrador ? 'Administrador' : 'Vendedor'}
+
           </Typography>
 
           <List sx={{ mt: 2 }}>

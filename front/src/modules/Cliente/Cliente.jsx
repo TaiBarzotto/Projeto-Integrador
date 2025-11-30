@@ -11,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Paper,
   Chip,
   Typography,
@@ -34,10 +35,11 @@ export default function ClientesPage () {
   const [searchTerm, setSearchTerm] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [erro, setErro] = useState('')
+  const [orderBy, setOrderBy] = useState('')
+  const [order, setOrder] = useState('asc')
   const [clienteEditando, setClienteEditando] = useState({})
   const currentUser = JSON.parse(localStorage.getItem('user'))
-  const isAdmin = currentUser.role === 'administrador'
-
+  const isAdmin = currentUser.administrador
   const buscaClientes = async () => {
     try {
       const response = await axios.get('http://localhost:3002/cliente/todos')
@@ -90,7 +92,10 @@ export default function ClientesPage () {
     try {
       console.log('DEBUG AQUI')
       console.log(cliente)
-      const response = await axios.put('http://localhost:3002/cliente/', cliente )
+      const response = await axios.put(
+        'http://localhost:3002/cliente/',
+        cliente
+      )
       buscaClientes()
       console.log(response.data)
       setErro('')
@@ -119,6 +124,36 @@ export default function ClientesPage () {
       cadastrarCliente(cliente)
     }
   }
+
+  const handleRequestSort = property => {
+    if (orderBy === property) {
+      // Ciclo: asc -> desc -> sem ordenação
+      if (order === 'asc') {
+        setOrder('desc')
+      } else if (order === 'desc') {
+        setOrderBy('')
+        setOrder('asc')
+      }
+    } else {
+      setOrderBy(property)
+      setOrder('asc')
+    }
+  }
+
+  const clientesOrdenados = [...clientesFiltrados].sort((a, b) => {
+    if (!orderBy) return 0
+
+    const aValue = (a[orderBy] || '').toLowerCase()
+    const bValue = (b[orderBy] || '').toLowerCase()
+
+    if (aValue < bValue) {
+      return order === 'asc' ? -1 : 1
+    }
+    if (aValue > bValue) {
+      return order === 'asc' ? 1 : -1
+    }
+    return 0
+  })
 
   const clientesComPromocoes = clientes.filter(c => c.aceita_promocoes).length
 
@@ -286,7 +321,15 @@ export default function ClientesPage () {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Nome</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'nome'}
+                      direction={orderBy === 'nome' ? order : 'asc'}
+                      onClick={() => handleRequestSort('nome')}
+                    >
+                      Nome
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell>Contato</TableCell>
                   <TableCell>Cidade</TableCell>
                   <TableCell>Data Nascimento</TableCell>
@@ -295,7 +338,7 @@ export default function ClientesPage () {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {clientesFiltrados.map(cliente => (
+                {clientesOrdenados.map(cliente => (
                   <TableRow key={cliente.email} hover>
                     <TableCell>
                       <Box>

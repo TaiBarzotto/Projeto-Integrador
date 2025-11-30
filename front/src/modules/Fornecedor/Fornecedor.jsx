@@ -22,7 +22,8 @@ import {
   CardContent,
   TablePagination,
   Typography,
-  InputAdornment
+  InputAdornment,
+  TableSortLabel
 } from '@mui/material'
 import {
   Plus,
@@ -44,6 +45,8 @@ export default function FornecedoresPage () {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(15)
+  const [orderBy, setOrderBy] = useState('')
+  const [order, setOrder] = useState('asc')
 
   const buscaFornecedores = async () => {
     try {
@@ -119,11 +122,42 @@ export default function FornecedoresPage () {
       cadastrarFornecedor(fornecedor)
     }
   }
+
+  const handleRequestSort = (property) => {
+    if (orderBy === property) {
+      // Ciclo: asc -> desc -> sem ordenação
+      if (order === 'asc') {
+        setOrder('desc')
+      } else if (order === 'desc') {
+        setOrderBy('')
+        setOrder('asc')
+      }
+    } else {
+      setOrderBy(property)
+      setOrder('asc')
+    }
+  }
+
   const fornecedoresFiltrados = fornecedores.filter(
     f =>
       (f.nome_pessoa?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (f.nome_da_marca?.toLowerCase() || '').includes(searchTerm.toLowerCase())
   )
+
+  const fornecedoresOrdenados = [...fornecedoresFiltrados].sort((a, b) => {
+    if (!orderBy) return 0
+    
+    const aValue = (a[orderBy] || '').toLowerCase()
+    const bValue = (b[orderBy] || '').toLowerCase()
+    
+    if (aValue < bValue) {
+      return order === 'asc' ? -1 : 1
+    }
+    if (aValue > bValue) {
+      return order === 'asc' ? 1 : -1
+    }
+    return 0
+  })
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -200,19 +234,35 @@ export default function FornecedoresPage () {
             <Table sx={{ minWidth: 600 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Representante</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'nome_pessoa'}
+                      direction={orderBy === 'nome_pessoa' ? order : 'asc'}
+                      onClick={() => handleRequestSort('nome_pessoa')}
+                    >
+                      Representante
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell>Contato</TableCell>
-                  <TableCell>Marca</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'nome_da_marca'}
+                      direction={orderBy === 'nome_da_marca' ? order : 'asc'}
+                      onClick={() => handleRequestSort('nome_da_marca')}
+                    >
+                      Marca
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell>Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? fornecedoresFiltrados.slice(
+                  ? fornecedoresOrdenados.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : fornecedoresFiltrados
+                  : fornecedoresOrdenados
                 ).map(fornecedor => (
                   <TableRow key={fornecedor.id} hover>
                     <TableCell>
@@ -271,7 +321,7 @@ export default function FornecedoresPage () {
           </TableContainer>
           <TablePagination
             component='div'
-            count={fornecedoresFiltrados.length}
+            count={fornecedoresOrdenados.length}
             page={page}
             onPageChange={(e, newPage) => setPage(newPage)}
             rowsPerPage={rowsPerPage}
