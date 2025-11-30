@@ -92,6 +92,36 @@ export default function Produto () {
       setErro(error.response.data)
     }
   }
+  const cadastrarProduto = async novoProduto => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3002/produto',
+        novoProduto
+      )
+      buscaProdutos()
+      setErro('')
+    } catch (error) {
+      setErro(error.response.data)
+    }
+  }
+
+  const atualizaProduto = async produto => {
+    try {
+      let id = produto.id
+      const response = await axios.put(`http://localhost:3002/produto/${id}`, {
+        nome: produto.nome,
+        preco_venda: produto.preco_venda,
+        categorias: produto.categorias,
+        variantes: produto.variantes
+      })
+      buscaProdutos()
+      setErro('')
+    } catch (error) {
+      setErro(error.response.data)
+      console.log(error)
+    }
+  }
+
   const handleNovoProduto = () => {
     setProdutoEditando(null)
     setDialogOpen(true)
@@ -153,12 +183,13 @@ export default function Produto () {
   }
 
   const handleSalvarProduto = async produto => {
-    // Recarrega a lista após salvar
-    await buscaProdutos()
-    setDialogOpen(false)
+    if (produto.id) {
+      atualizaProduto(produto)
+    } else {
+      cadastrarProduto(produto)
+    }
   }
 
-  
   const toggleExpandir = produtoId => {
     const novosExpandidos = new Set(produtosExpandidos)
     if (novosExpandidos.has(produtoId)) {
@@ -669,9 +700,7 @@ export default function Produto () {
                                 <IconButton
                                   size='small'
                                   color='error'
-                                  onClick={() =>
-                                    deletaProdutos(produto.id)
-                                  }
+                                  onClick={() => deletaProdutos(produto.id)}
                                 >
                                   <Trash2 size={18} />
                                 </IconButton>
@@ -732,10 +761,20 @@ export default function Produto () {
                                           mb: 2
                                         }}
                                       >
-                                        <Chip label={cor} variant='outlined' />
-                                        <Typography variant='body2'>
-                                          Variações disponíveis:
-                                        </Typography>
+                                        <Stack spacing={2}>
+                                          <Grid>
+                                            <Typography variant='body2'>
+                                              Cor:
+                                            </Typography>
+                                            <Chip
+                                              label={cor}
+                                              variant='outlined'
+                                            />
+                                          </Grid>
+                                          <Typography variant='body2'>
+                                            Variações disponíveis:
+                                          </Typography>
+                                        </Stack>
                                       </Box>
 
                                       <Grid container spacing={2}>
