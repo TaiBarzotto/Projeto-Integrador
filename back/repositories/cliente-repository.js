@@ -49,18 +49,19 @@ const atualizarCliente = async (email, dadosAtualizados) => {
 		const cliente = await model.Cliente.findByPk(email)
 		
 		if (!cliente) return null
-
+		console.log("DEBUG", cliente)
+		console.log("DEBUG", dadosAtualizados.Endereco)
 		// Se vier um endereço no body, atualiza ou cria
-		if (dadosAtualizados.endereco) {
+		if (dadosAtualizados.Endereco) {
 			if (cliente.fk_endereco) {
 				// Já tem endereço → atualizar
-				await model.Endereco.update(dadosAtualizados.endereco, {
+				await model.Endereco.update(dadosAtualizados.Endereco, {
 					where: { id: cliente.fk_endereco },
 				})
 			} else {
 				// Não tem endereço → criar
 				const novoEndereco = await model.Endereco.create(
-					dadosAtualizados.endereco,
+					dadosAtualizados.Endereco,
 				)
 				dadosAtualizados.fk_endereco = novoEndereco.id
 			}

@@ -21,13 +21,13 @@ const criaCliente = async (req, res) => {
             genero,
             nascimento,
             aceita_promocoes,
-            endereco,
+            Endereco,
         } = req.body
-
-        if (!email || !nome || !telefone || !genero || !nascimento || !aceita_promocoes || !endereco ) {
+        console.log("DEBUG", req.body)
+        if (!email || !nome || !telefone) {
             return res
                 .status(400)
-                .json({ message: "Nome e email são obrigatórios." })
+                .json({ message: "Nome, email, telefone são obrigatórios." })
         }
 
         const novoCliente = await clienteRepository.criarCliente(
@@ -39,7 +39,7 @@ const criaCliente = async (req, res) => {
                 nascimento,
                 aceita_promocoes,
             },
-            endereco,
+            Endereco,
         )
 
         return res.status(201).json(novoCliente)
@@ -59,7 +59,7 @@ const atualizaCliente = async (req, res) => {
             genero,
             nascimento,
             aceita_promocoes,
-            endereco,
+            Endereco,
         } = req.body
 
         const clienteAtualizado = await clienteRepository.atualizarCliente(
@@ -70,7 +70,7 @@ const atualizaCliente = async (req, res) => {
                 genero,
                 nascimento,
                 aceita_promocoes,
-                endereco,
+                Endereco,
             }
         )
 
@@ -100,6 +100,12 @@ const deletaCliente = async (req, res) => {
             res.status(404).json({ message: "cliente não encontrado" })
         }
     } catch (error) {
+        if (error.name === "SequelizeForeignKeyConstraintError") {
+			return res.status(409).json({
+				message: "Cliente não pode ser deletado pois está atrelado a uma venda"
+			});
+		}
+
         console.error("Erro ao deletar cliente:", error)
         res.status(500).json({ message: "Erro ao deletar cliente" })
     }

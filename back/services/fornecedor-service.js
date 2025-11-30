@@ -86,7 +86,7 @@ const deletaFornecedor = async (req, res) => {
 		console.error("Erro ao deletar fornecedor:", error);
 		if (error.name === "SequelizeForeignKeyConstraintError") {
 			return res.status(409).json({
-				message: "Fornecedor não pode ser deletado pois está sendo usado em outra tabela"
+				message: "Fornecedor não pode ser deletado pois está atrelado a um produto"
 			});
 		}
 
