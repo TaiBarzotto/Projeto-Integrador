@@ -13,18 +13,9 @@ import LoginPage from './Login'
 import { Navbar } from './modules/layout/Navbar'
 import Fornecedor from './modules/Fornecedor/Fornecedor'
 import Cliente from './modules/Cliente/Cliente'
+import Produto from './modules/Produto/Produto'
 
 import { Box, Container } from '@mui/material'
-//import { Navbar } from './components/layout/Navbar';
-//import { Dashboard } from './components/dashboard/Dashboard';
-//import { ProdutosPage } from './components/produtos/ProdutosPage';
-//import { ClientesPage } from './components/clientes/ClientesPage';
-//import { VendasPage } from './components/vendas/VendasPage';
-//import { DespesasPage } from './components/despesas/DespesasPage';
-//import { CategoriasPage } from './components/categorias/CategoriasPage';
-//import { FinanceiroPage } from './components/financeiro/FinanceiroPage';
-//import { AlertasPage } from './components/alertas/AlertasPage';
-//import { ConfiguracoesPage } from './components/configuracoes/ConfiguracoesPage';
 
 function LayoutProtegido ({ usuario, onLogout, children }) {
   return (
@@ -90,6 +81,18 @@ function App () {
             }
           />
 
+            <Route
+            path='/produtos'
+            element={
+              usuario ? (
+                <LayoutProtegido usuario={usuario} onLogout={handleLogout}>
+                  <Produto usuario={usuario} />
+                </LayoutProtegido>
+              ) : (
+                <Navigate to='/login' replace />
+              )
+            }
+          />
           {/* DEFAULT */}
           <Route path='*' element={<Navigate to='/login' replace />} />
         </Routes>

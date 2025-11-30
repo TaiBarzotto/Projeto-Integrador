@@ -145,13 +145,12 @@ CREATE TABLE Categoria_Produto_Produto (
 );
 
 CREATE TABLE item_venda (
+    id SERIAL PRIMARY KEY,
     fk_variante_produto_estoque_id INT,
     fk_vendas_id INT,
     preco_unitario DECIMAL(10,2),
     subtotal DECIMAL(10,2),
-    quantidade INT,
-    CONSTRAINT PK_Item_Venda
-        PRIMARY KEY (fk_variante_produto_estoque_id, fk_vendas_id)
+    quantidade INT
 );
 
 --Referenciação das chaves estrangeiras
@@ -189,7 +188,7 @@ ALTER TABLE Fornecedor_Estoque
 
 ALTER TABLE Fornecedor_Estoque
     ADD CONSTRAINT FK_Fornecedor_Estoque_2 FOREIGN KEY (fk_estoque_id)
-    REFERENCES Variante_Produto_Estoque (ID);
+    REFERENCES Variante_Produto_Estoque (ID) ON DELETE CASCADE;
 
 ALTER TABLE Despesa
     ADD CONSTRAINT FK_Despesa_2 FOREIGN KEY (fk_categoria_despesa)
@@ -201,11 +200,11 @@ ALTER TABLE Categoria_Produto_Produto
 
 ALTER TABLE Categoria_Produto_Produto
     ADD CONSTRAINT FK_Categoria_Produto_Produto_2 FOREIGN KEY (fk_produto_id)
-    REFERENCES Produto (Id) ON DELETE RESTRICT;
+    REFERENCES Produto (Id) ON DELETE CASCADE;
 
 ALTER TABLE item_venda
     ADD CONSTRAINT FK_item_venda_1 FOREIGN KEY (fk_variante_produto_estoque_id)
-    REFERENCES Variante_Produto_Estoque (ID) ON DELETE RESTRICT;
+    REFERENCES Variante_Produto_Estoque (ID) ON DELETE SET NULL;
 
 ALTER TABLE item_venda
     ADD CONSTRAINT FK_item_venda_2 FOREIGN KEY (fk_vendas_id)

@@ -9,6 +9,12 @@ produtoRouter.post("/", produtoService.criaProduto);
 // GET /produtos - Retornar todos os produtos
 produtoRouter.get("/todos", produtoService.retornaTodosProdutos);
 
+// GET /produtos - Retornar todas as categorias de produtos
+produtoRouter.get("/categorias", produtoService.retornaTodasCategoriasProdutos);
+
+// GET /produtos - Retornar todas as categorias de produtos
+produtoRouter.get("/info", produtoService.retornaTodasInformacoesProduto);
+
 // GET /produto/:id - Retornar produto por ID
 produtoRouter.get("/:id", produtoService.retornaProdutoPorId);
 
