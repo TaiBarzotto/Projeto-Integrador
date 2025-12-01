@@ -76,6 +76,7 @@ export default function Produto () {
       const response = await axios.get('http://localhost:3002/produto/info')
       console.log('Produtos:', response.data)
       setProdutos(response.data.produtos)
+      setErro('')
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
       setProdutos([])
@@ -468,6 +469,11 @@ export default function Produto () {
 
   return (
     <Box sx={{ p: { xs: 2, sm: 3 } }}>
+      {erro && (
+        <Alert variant='filled' severity='error' sx={{ mb: 3 }}>
+          {erro.message}
+        </Alert>
+      )}
       {/* Header */}
       <Box
         sx={{

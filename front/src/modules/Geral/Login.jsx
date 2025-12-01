@@ -62,7 +62,7 @@ export default function LoginPage ({ onLogin }) {
       if (usuario) {
         localStorage.setItem('user', JSON.stringify(usuario))
         onLogin(usuario)
-        navigate('/produtos')
+        navigate('/home')
       } else {
         setErro('Email ou senha incorretos')
       }

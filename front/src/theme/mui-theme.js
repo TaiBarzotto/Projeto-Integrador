@@ -7,7 +7,8 @@ export const muiTheme = createTheme({
   palette: {
     verde: {
       clarinho: '#E2E5DE',
-      menos_claro: '#C2C3A8'
+      menos_claro: '#C2C3A8',
+      escuro:'#b4b596'
     },
     primary: {
       main: COLORS.FOREGROUND, // #C2C3A8

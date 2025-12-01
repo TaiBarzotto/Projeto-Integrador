@@ -52,6 +52,7 @@ export default function ClientesPage () {
 
   useEffect(() => {
     buscaClientes()
+    setErro('')
   }, [])
 
   const clientesFiltrados = clientes.filter(

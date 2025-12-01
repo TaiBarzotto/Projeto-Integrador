@@ -53,6 +53,7 @@ export default function FornecedoresPage () {
       const response = await axios.get('http://localhost:3002/fornecedor/todos')
       console.log(response.data)
       setFornecedores(response.data.fornecedores)
+      setErro('')
     } catch (error) {
       setErro(error)
       setFornecedores([])
@@ -90,11 +91,12 @@ export default function FornecedoresPage () {
     try {
       let id = fornecedor.id
       const response = await axios.put(
-        `http://localhost:3002/fornecedor/${id}`, {
+        `http://localhost:3002/fornecedor/${id}`,
+        {
           nome_pessoa: fornecedor.nome_pessoa,
           email: fornecedor.email,
           telefone: fornecedor.telefone,
-          nome_da_marca: fornecedor.nome_da_marca,
+          nome_da_marca: fornecedor.nome_da_marca
         }
       )
       buscaFornecedores()
@@ -123,7 +125,7 @@ export default function FornecedoresPage () {
     }
   }
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = property => {
     if (orderBy === property) {
       // Ciclo: asc -> desc -> sem ordenação
       if (order === 'asc') {
@@ -146,10 +148,10 @@ export default function FornecedoresPage () {
 
   const fornecedoresOrdenados = [...fornecedoresFiltrados].sort((a, b) => {
     if (!orderBy) return 0
-    
+
     const aValue = (a[orderBy] || '').toLowerCase()
     const bValue = (b[orderBy] || '').toLowerCase()
-    
+
     if (aValue < bValue) {
       return order === 'asc' ? -1 : 1
     }

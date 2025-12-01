@@ -40,14 +40,14 @@ export function Navbar ({ usuario, onLogout }) {
   const currentPage = location.pathname.replace('/', '')
 
   const menuItems = [
-    { id: 'dashboard', label: 'Home', icon: Home },
+    { id: 'home', label: 'Home', icon: Home },
     { id: 'produtos', label: 'Produtos', icon: Package },
     { id: 'clientes', label: 'Clientes', icon: Users },
     { id: 'fornecedores', label: 'Fornecedores', icon: Truck, adminOnly: true },
-    { id: 'vendas', label: 'Vendas', icon: ShoppingCart },
-    { id: 'despesas', label: 'Despesas', icon: Receipt, adminOnly: true },
+    { id: 'emDev', label: 'Vendas', icon: ShoppingCart },
+    { id: 'emDev', label: 'Despesas', icon: Receipt, adminOnly: true },
     {
-      id: 'categorias',
+      id: 'emDev',
       label: 'Categorias',
       icon: FolderTree,
       adminOnly: true
@@ -81,7 +81,7 @@ export function Navbar ({ usuario, onLogout }) {
         }}
       >
         <Toolbar sx={{ gap: 4, py: 1.5 }}>
-          <Typography variant='h6'>Loja Manager</Typography>
+          <Typography variant='h6'>Tok Digital</Typography>
 
           {/* DESKTOP MENU */}
           <Box

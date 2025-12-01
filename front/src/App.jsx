@@ -9,11 +9,13 @@ import {
   Navigate
 } from 'react-router-dom'
 
-import LoginPage from './Login'
+import LoginPage from './modules/Geral/Login'
 import { Navbar } from './modules/layout/Navbar'
 import Fornecedor from './modules/Fornecedor/Fornecedor'
 import Cliente from './modules/Cliente/Cliente'
 import Produto from './modules/Produto/Produto'
+import EmDev from './modules/Geral/EmDev'
+import HomePage from './modules/Geral/Home'
 
 import { Box, Container } from '@mui/material'
 
@@ -56,6 +58,19 @@ function App () {
 
           {/* ROTAS PROTEGIDAS */}
           <Route
+            path='/home'
+            element={
+              usuario ? (
+                <LayoutProtegido usuario={usuario} onLogout={handleLogout}>
+                  <HomePage usuario={usuario} />
+                </LayoutProtegido>
+              ) : (
+                <Navigate to='/login' replace />
+              )
+            }
+          />
+
+          <Route
             path='/fornecedores'
             element={
               usuario ? (
@@ -81,12 +96,25 @@ function App () {
             }
           />
 
-            <Route
+          <Route
             path='/produtos'
             element={
               usuario ? (
                 <LayoutProtegido usuario={usuario} onLogout={handleLogout}>
                   <Produto usuario={usuario} />
+                </LayoutProtegido>
+              ) : (
+                <Navigate to='/login' replace />
+              )
+            }
+          />
+
+          <Route
+            path='/emDev'
+            element={
+              usuario ? (
+                <LayoutProtegido usuario={usuario} onLogout={handleLogout}>
+                  <EmDev />
                 </LayoutProtegido>
               ) : (
                 <Navigate to='/login' replace />

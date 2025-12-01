@@ -38,8 +38,8 @@ const criaProduto = async (req, res) => {
 	const { 
 		nome, 
 		preco_venda, 
-		categorias, // Array de IDs de categorias
-		variantes   // Array de variantes com fornecedores
+		categorias, 
+		variantes   
 	} = req.body;
 
 	try {
