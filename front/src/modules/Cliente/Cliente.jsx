@@ -38,8 +38,9 @@ export default function ClientesPage () {
   const [orderBy, setOrderBy] = useState('')
   const [order, setOrder] = useState('asc')
   const [clienteEditando, setClienteEditando] = useState({})
-  const currentUser = JSON.parse(localStorage.getItem('user'))
-  const isAdmin = currentUser.administrador
+  const token = localStorage.getItem('token')
+  const currentUser = token ? jwtDecode(token) : null
+  const isAdmin = currentUser?.administrador
   const buscaClientes = async () => {
     try {
       const response = await axios.get('http://localhost:3002/cliente/todos')

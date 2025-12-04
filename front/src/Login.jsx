@@ -1,26 +1,13 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import React from "react";
+import { useState } from 'react'
+import axios from './axiosConfig' // ← Mudou aqui para usar o axios configurado
 import {
-  Box,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  InputAdornment,
-  IconButton,
-  Alert,
-  Divider,
-  Avatar,
-  Container,
-  Paper,
-  Chip
+  Box, CardContent, TextField, Button, Typography, InputAdornment, IconButton,
+  Alert, Avatar, Container, Paper
 } from '@mui/material'
 import {
   Visibility,
   VisibilityOff,
-  AccountCircleIcon,
-  ShoppingBag,
   Email,
   Lock
 } from '@mui/icons-material'
@@ -28,46 +15,64 @@ import { useNavigate } from 'react-router-dom'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 
 export default function LoginPage ({ onLogin }) {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [mostrarSenha, setMostrarSenha] = useState(false)
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(false)
-  const [usuarios, setUsuarios] = useState(false)
+  	const navigate = useNavigate()
 
-  const buscaUsusetUsuarios = async () => {
-    try {
-      const response = await axios.get('http://localhost:3002/usuario/todos')
-      console.log(response.data)
-      setUsuarios(response.data.usuarios)
-    } catch (error) {
-      setErro(error)
-      setUsuarios([])
+  
+  async function enviaLogin() {
+    const response = await axios.post("http://localhost:3002/login", {
+      username: email,
+      password: senha,
+    });
+    
+    if (response.status >= 200 && response.status < 300) {
+      // Salva o token JWT no localStorage
+      localStorage.setItem("token", response.data.token);
+            
+      // Configura o header de autorização para todas as requisições futuras
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      
+      return response.data;
+    } else {
+      throw new Error("Falha na autenticação");
     }
   }
 
-  useEffect(() => {
-    buscaUsusetUsuarios()
-    setErro('')
-  }, [])
-  
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setErro('')
     setCarregando(true)
 
-    setTimeout(() => {
-      const usuario = usuarios.find(u => u.email === email && u.senha === senha)
-      if (usuario) {
-        localStorage.setItem('user', JSON.stringify(usuario))
-        onLogin(usuario)
+    try {
+      const data = await enviaLogin()
+      
+      // Chama a função onLogin passada como prop
+      if (onLogin) {
+        onLogin(data)
         navigate('/home')
-      } else {
-        setErro('Email ou senha incorretos')
       }
+      
+    } catch (error) {
+      console.error(error);
+      
+      // Trata diferentes tipos de erro
+      if (error.response) {
+        // Erro vindo do servidor
+        setErro(error.response.data.message || 'Credenciais inválidas. Tente novamente.')
+      } else if (error.request) {
+        // Erro de conexão
+        setErro('Não foi possível conectar ao servidor. Verifique sua conexão.')
+      } else {
+        // Outros erros
+        setErro('Erro ao fazer login. Tente novamente.')
+      }
+    } finally {
       setCarregando(false)
-    }, 800)
+    }
   }
 
   return (

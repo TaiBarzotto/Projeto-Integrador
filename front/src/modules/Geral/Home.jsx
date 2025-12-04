@@ -10,13 +10,15 @@ import {
   useMediaQuery
 } from '@mui/material'
 import { User, ShieldCheck, Store, ArrowRight } from 'lucide-react'
+import { jwtDecode } from 'jwt-decode'
 
 export default function HomePage () {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   // Pega o usuário do localStorage
-  const currentUser = JSON.parse(localStorage.getItem('user'))
+  const token = localStorage.getItem('token')
+  const currentUser = token ? jwtDecode(token) : null
   const isAdmin = currentUser?.administrador
 
   return (

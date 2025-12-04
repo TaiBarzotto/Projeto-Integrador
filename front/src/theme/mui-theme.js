@@ -5,6 +5,9 @@ import { Bold } from 'lucide-react'
 // Criar tema customizado do Material-UI baseado nas cores do sistema
 export const muiTheme = createTheme({
   palette: {
+    cores_chart: {
+      palette: ['#4F46E5', '#06B6D4', '#10B981', '#F59E0B', '#EF4444']
+    },
     verde: {
       clarinho: '#E2E5DE',
       menos_claro: '#C2C3A8',

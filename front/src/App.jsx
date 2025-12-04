@@ -9,13 +9,15 @@ import {
   Navigate
 } from 'react-router-dom'
 
-import LoginPage from './modules/Geral/Login'
+import LoginPage from './Login'
 import { Navbar } from './modules/layout/Navbar'
 import Fornecedor from './modules/Fornecedor/Fornecedor'
 import Cliente from './modules/Cliente/Cliente'
 import Produto from './modules/Produto/Produto'
 import EmDev from './modules/Geral/EmDev'
 import HomePage from './modules/Geral/Home'
+import Financeiro from './modules/Financeiro/Financeiro'
+import { jwtDecode } from 'jwt-decode'
 
 import { Box, Container } from '@mui/material'
 
@@ -35,16 +37,21 @@ function App () {
   const [usuario, setUsuario] = useState(null)
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('usuario')
-    if (savedUser) setUsuario(JSON.parse(savedUser))
+    // Busca o usuário salvo no localStorage
+    const token = localStorage.getItem('token')
+    
+    if (token) {
+      setUsuario(token)
+    }
   }, [])
 
-  const handleLogin = usuarioLogado => {
-    setUsuario(usuarioLogado)
+  const handleLogin = (data) => {
+    setUsuario(data.user)
   }
 
   const handleLogout = () => {
     setUsuario(null)
+    localStorage.removeItem('token')
   }
 
   return (
@@ -102,6 +109,19 @@ function App () {
               usuario ? (
                 <LayoutProtegido usuario={usuario} onLogout={handleLogout}>
                   <Produto usuario={usuario} />
+                </LayoutProtegido>
+              ) : (
+                <Navigate to='/login' replace />
+              )
+            }
+          />
+
+          <Route
+            path='/financeiro'
+            element={
+              usuario ? (
+                <LayoutProtegido usuario={usuario} onLogout={handleLogout}>
+                  <Financeiro />
                 </LayoutProtegido>
               ) : (
                 <Navigate to='/login' replace />

@@ -43,12 +43,12 @@ import {
 } from 'lucide-react'
 import { ProdutoDialog } from './ProdutoDialog'
 import { formatCurrency } from '../../lib/utils'
+import { jwtDecode } from 'jwt-decode'
 
 export default function Produto () {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const isTablet = useMediaQuery(theme.breakpoints.down('md'))
-  const currentUser = JSON.parse(localStorage.getItem('user'))
 
   const [produtos, setProdutos] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -59,7 +59,10 @@ export default function Produto () {
   const [order, setOrder] = useState('asc')
   const [produtosExpandidos, setProdutosExpandidos] = useState(new Set())
 
-  const isAdmin = currentUser.administrador
+
+  const token = localStorage.getItem('token')
+  const currentUser = token ? jwtDecode(token) : null
+  const isAdmin = currentUser?.administrador
 
   // Filtro melhorado que busca também nos códigos de barras das variantes
   const produtosFiltrados = produtos.filter(p => {
